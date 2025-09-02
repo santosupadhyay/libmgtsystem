@@ -2,6 +2,7 @@ const express = require("express");
 
 const { dbConnection } = require("./config/connection");
 const authRoutes = require('./routes/authRoutes')
+const bookRoutes = require('./routes/bookRoutes')
 
 require("dotenv").config();
 
@@ -15,6 +16,7 @@ dbConnection(process.env.MONGO_URI)
   .catch((error) => console.error(error));
 
 app.use('/api/auth', authRoutes)
+app.use('/api/books', bookRoutes)
 
 app.use("/", (request, response) => {
   response.send("Hello backend");
