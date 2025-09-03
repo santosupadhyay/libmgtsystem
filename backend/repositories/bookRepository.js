@@ -5,7 +5,7 @@ const BookRepository = ( book ) => ({
     getAllBooks: async() => {
         return await book.find()
     },
-    getBookById : async(id) => {
+    getBookById : async(id) => { 
         return await book.findById(id)
     },
     updateBookById : async(id, updateData) => {

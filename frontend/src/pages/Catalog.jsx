@@ -68,6 +68,7 @@ const Catalog = () => {
           filteredBooks.map((book) => (
             <BookCard
               key={book._id}
+              id={book._id}
               title={book.title}
               author={book.author}
               category={book.category}
