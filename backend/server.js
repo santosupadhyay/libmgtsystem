@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors')
 
 const { dbConnection } = require("./config/connection");
 const authRoutes = require('./routes/authRoutes')
@@ -10,6 +11,13 @@ const port = process.env.PORT;
 
 const app = express();
 app.use(express.json());
+
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+  methods:['POST', 'GET', 'UPDATE', 'DELETE']
+}));
+
 
 dbConnection(process.env.MONGO_URI)
   .then(() => console.log(`mongodb connection successful !!`))

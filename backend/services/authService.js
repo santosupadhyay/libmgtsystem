@@ -35,6 +35,8 @@ const AuthService = (authRepo) => ({
       email: newUser.email,
       password: newUser.password,
       role: newUser.role,
+      phone:newUser.phone,
+      address:newUser.address
     };
   },
 
@@ -63,6 +65,8 @@ const AuthService = (authRepo) => ({
         name: user.name,
         email: user.email,
         role: user.role,
+        phone:user.phone,
+        address:user.address
       },
       token,
       refresh,

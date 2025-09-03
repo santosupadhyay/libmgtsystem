@@ -22,6 +22,15 @@ const bookSchema = new mongoose.Schema(
       required: [true, "Quantity is required"],
       default: 1,
     },
+    author:{
+      type:String,
+      required:[true, 'Author is required']
+    },
+    available:{
+      type:String,
+      enum:['yes', 'no'],
+      default:'yes'
+    }
   },
   { timestamps: true }
 );

@@ -1,27 +1,87 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import BookCard from "../components/ui/BookCard";
+import axios from "axios";
+import { FaSearch } from "react-icons/fa";
+
+const API_URL = "http://localhost:3000/api/books";
 
 const Catalog = () => {
-  const books = [
-    { title: "The Hobbit", author: "J.R.R. Tolkien", category: "Fantasy" },
-    { title: "Pride and Prejudice", author: "Jane Austen", category: "Classic" },
-    { title: "The Catcher in the Rye", author: "J.D. Salinger", category: "Fiction" },
-    { title: "Moby Dick", author: "Herman Melville", category: "Adventure" },
-  ];
+  const [books, setBooks] = useState([]);
+
+  const [filteredBooks, setFilteredBooks] = useState([]);
+  const [search, setSearch] = useState("");
+
+  const fetchBooks = async () => {
+    const response = await axios.get(`${API_URL}`);
+    const result = response.data.data;
+    setBooks(result);
+    setFilteredBooks(result);
+  };
+
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearch(query);
+
+    if (query.trim === "") {
+      setFilteredBooks(books);
+    } else {
+      const filtered = books.filter(
+        (book) =>
+          book.title.toLowerCase().includes(query) ||
+          book.author.toLowerCase().includes(query) ||
+          book.category.toLowerCase().includes(query)
+      );
+      setFilteredBooks(filtered);
+    }
+  };
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
-      <h2 className="text-4xl font-bold text-gray-800 mb-10">Catalog</h2>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        {books.map((book, idx) => (
-          <div key={idx} className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1">
-            <h3 className="text-xl font-semibold mb-2 text-blue-600">{book.title}</h3>
-            <p className="text-gray-700 mb-1">Author: {book.author}</p>
-            <p className="text-gray-500 mb-4 text-sm">Category: {book.category}</p>
-            <button className="w-full py-2 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition">
-              Borrow
-            </button>
-          </div>
-        ))}
+    <div className="max-w-7xl mx-auto px-6 py-10">
+      {/* Search & Sort */}
+      <div className="flex flex-col md:flex-row justify-center items-center mb-10 space-y-4 md:space-y-0 md:space-x-6">
+        {/* Search Bar with Icon */}
+        <div className="relative w-full md:w-1/2">
+          <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <input
+            value={search}
+            onChange={handleSearch}
+            type="text"
+            placeholder="Search books..."
+            className="w-full pl-12 pr-4 py-2 rounded-full border border-gray-300 shadow focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+
+        {/* Sort Buttons */}
+        <div className="flex space-x-3">
+          <button className="px-6 py-2 rounded-full bg-blue-500 text-white font-medium hover:bg-blue-600 transition">
+            ASC
+          </button>
+          <button className="px-6 py-2 rounded-full bg-indigo-500 text-white font-medium hover:bg-indigo-600 transition">
+            DSC
+          </button>
+        </div>
+      </div>
+
+      {/* Book Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {filteredBooks.length > 0 ? (
+          filteredBooks.map((book) => (
+            <BookCard
+              key={book._id}
+              title={book.title}
+              author={book.author}
+              category={book.category}
+              price={book.price}
+              available={book.available}
+            />
+          ))
+        ) : (
+          <p className="text-center text-gray-500 col-span-3">No books found</p>
+        )}
       </div>
     </div>
   );

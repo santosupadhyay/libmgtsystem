@@ -12,6 +12,8 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./components/common/Login";
 import Register from "./components/common/Register";
 
+import ProtectedRoute from './components/common/ProtectedRoute'
+
 function App() {
   return (
     <Routes>
@@ -21,14 +23,14 @@ function App() {
         <Route path="mybooks" element={<MyBooks />} />
         <Route path="profile" element={<Profile />} />
 
-        {/* <Route
+        <Route
           path="/admin"
           element={
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
           }
-        /> */}
+        />
       </Route>
 
       <Route path="/auth" element={<AuthLayout />}>
