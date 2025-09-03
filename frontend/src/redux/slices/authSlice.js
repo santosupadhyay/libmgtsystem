@@ -8,7 +8,7 @@ export const register = createAsyncThunk(
   async (userData, thunkAPI) => {
     try {
       const response = await axios.post(`${API_URL}/register`, userData);
-      console.log(response.data.data)
+      console.log(response.data.data);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.message);
@@ -17,13 +17,14 @@ export const register = createAsyncThunk(
 );
 
 export const login = createAsyncThunk(
-  "auth/loginUser", 
+  "auth/loginUser",
   async (userData, thunkAPI) => {
     try {
       const response = await axios.post(`${API_URL}/login`, userData);
-      console.log(response.data.data)
-      localStorage.setItem('token', response.data.data.token)
-      localStorage.setItem('user', JSON.stringify(response.data.data.user))
+      console.log(response.data.data);
+      localStorage.setItem("token", response.data.data.token);
+      console.log(response.data.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.data.user));
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -32,8 +33,8 @@ export const login = createAsyncThunk(
 );
 
 const initialState = {
-  user: null,
-  token: null,
+  user: JSON.parse(localStorage.getItem('user')) || null,
+  token: localStorage.getItem('token') || null,
   error: null,
   loading: false,
 };
@@ -52,10 +53,12 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(register.pending, (state) => {
-        (state.loading = true), (state.error = null);
+        state.loading = true;
+        state.error = null;
       })
       .addCase(register.fulfilled, (state, action) => {
-        (state.loading = false), (state.user = action.payload.user);
+        state.loading = false;
+        state.user = action.payload.user;
         state.token = action.payload.token;
       })
       .addCase(register.rejected, (state, action) => {
@@ -69,7 +72,8 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
-        state.token = action.payload.token;
+        state.token = action.payload.data.token;
+        console.log(state.token);
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;

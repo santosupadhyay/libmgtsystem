@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addBook } from "../../redux/slices/adminSlice";
+import Toast from "../ui/Toast";
 
 const AddBook = () => {
   const [formData, setFormData] = useState({
@@ -14,7 +15,7 @@ const AddBook = () => {
     available: "yes",
   });
 
-  const [successMessage, setSuccessMessage] = useState("");
+  const [toast, setToast] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,7 +24,7 @@ const AddBook = () => {
 
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.admin);
-  
+
   const resetForm = () => {
     setFormData({
       title: "",
@@ -38,27 +39,22 @@ const AddBook = () => {
 
   const handleAddBook = async (e) => {
     e.preventDefault();
-    setSuccessMessage(""); // Clear previous messages
-    console.log('Form data:', formData);
-    
-    const result = await dispatch(addBook(formData));
-    if (result.type.endsWith('/fulfilled')) {
-      setSuccessMessage("Book added successfully!");
+    try {
+      await dispatch(addBook(formData)).unwrap();
+      setToast({ message: "Book added successfully!", type: "success" });
       resetForm();
-      setTimeout(() => setSuccessMessage(""), 5000); // Clear message after 5 seconds
+      // Auto hide after 3s
+      setTimeout(() => setToast(null), 3000);
+    } catch (error) {
+      setToast({ message: "Failed to add book", type: "error" });
+      setTimeout(() => setToast(null), 3000);
+      console.log(error);
     }
   };
 
   return (
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
       <h2 className="text-3xl font-bold mb-8 text-center">Add New Book</h2>
-
-      {/* Success Message */}
-      {successMessage && (
-        <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
-          {successMessage}
-        </div>
-      )}
 
       {/* Error Message */}
       {error && (
@@ -172,6 +168,7 @@ const AddBook = () => {
           </button>
         </div>
       </form>
+      {toast && <Toast message={toast.message} type={toast.type} />}
     </div>
   );
 };

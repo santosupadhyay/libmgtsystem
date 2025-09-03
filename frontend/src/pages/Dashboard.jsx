@@ -1,14 +1,13 @@
-import React from "react";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const AdminDashboard = () => {
   const { books, loading, error } = useSelector((state) => state.admin);
+    const length = books.length;
 
-  const length = books.length;
 
-  if(loading) <p>Loading...</p>
-  if(error) <p>Error...</p>
+  if (loading) <p>Loading...</p>;
+  if (error) <p>Error...</p>;
 
   return (
     <div className="min-h-screen bg-gray-100">
