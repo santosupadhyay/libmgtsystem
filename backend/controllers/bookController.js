@@ -1,14 +1,19 @@
 const BookController = (bookService) => ({
     createBook: async(request, response) => {
         try {
+            console.log('Creating book with data:', request.body);
+            console.log('User role:', request.user.role);
             const userRole = request.user.role;
             const book = await bookService.createBook(request.body, userRole);
+            console.log('Book created successfully:', book);
             response.status(201).json({
                 success:true,
                 message:'Book created successfully!!',
                 data:book
             })
         } catch (error) {
+            console.error('Error creating book:', error.message);
+            console.error('Full error:', error);
             return response.status(500).json({
                 success:false,
                 message:error.message
@@ -21,7 +26,8 @@ const BookController = (bookService) => ({
             response.status(200).json({
                 success:true,
                 message:'Books fetched successfully',
-                data:books
+                data:books,
+                length:books.length
             })
         } catch (error) {
             return response.status(500).json({

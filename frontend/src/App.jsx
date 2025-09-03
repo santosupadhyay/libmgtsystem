@@ -13,6 +13,8 @@ import Login from "./components/common/Login";
 import Register from "./components/common/Register";
 
 import ProtectedRoute from './components/common/ProtectedRoute'
+import BookList from "./components/common/BookList";
+import AddBook from "./components/common/AddBook";
 
 function App() {
   return (
@@ -28,6 +30,22 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/booklist"
+          element={
+            <ProtectedRoute>
+              <BookList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/addbook"
+          element={
+            <ProtectedRoute>
+              <AddBook />
             </ProtectedRoute>
           }
         />

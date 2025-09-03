@@ -1,32 +1,29 @@
 import React, { useEffect, useState } from "react";
 import BookCard from "../components/ui/BookCard";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 import { FaSearch } from "react-icons/fa";
-
-const API_URL = "http://localhost:3000/api/books";
+import { fetchBooks } from "../redux/slices/adminSlice";
 
 const Catalog = () => {
-  const [books, setBooks] = useState([]);
+  const dispatch = useDispatch();
+  const { books, loading, error } = useSelector((state) => state.admin);
 
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [search, setSearch] = useState("");
 
-  const fetchBooks = async () => {
-    const response = await axios.get(`${API_URL}`);
-    const result = response.data.data;
-    setBooks(result);
-    setFilteredBooks(result);
-  };
+  useEffect(() => {
+    dispatch(fetchBooks());
+  }, [dispatch]);
 
   useEffect(() => {
-    fetchBooks();
-  }, []);
+    setFilteredBooks(books);
+  }, [books]);
 
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearch(query);
 
-    if (query.trim === "") {
+    if (query.trim() === "") {
       setFilteredBooks(books);
     } else {
       const filtered = books.filter(
@@ -39,11 +36,13 @@ const Catalog = () => {
     }
   };
 
+  if (loading) return <p className="text-center">Loading books...</p>;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
       {/* Search & Sort */}
       <div className="flex flex-col md:flex-row justify-center items-center mb-10 space-y-4 md:space-y-0 md:space-x-6">
-        {/* Search Bar with Icon */}
         <div className="relative w-full md:w-1/2">
           <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <input
@@ -54,8 +53,6 @@ const Catalog = () => {
             className="w-full pl-12 pr-4 py-2 rounded-full border border-gray-300 shadow focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>
-
-        {/* Sort Buttons */}
         <div className="flex space-x-3">
           <button className="px-6 py-2 rounded-full bg-blue-500 text-white font-medium hover:bg-blue-600 transition">
             ASC
@@ -66,7 +63,6 @@ const Catalog = () => {
         </div>
       </div>
 
-      {/* Book Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredBooks.length > 0 ? (
           filteredBooks.map((book) => (
