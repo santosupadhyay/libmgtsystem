@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaSearch } from "react-icons/fa";
 import { fetchBooks } from "../redux/slices/adminSlice";
 
-const Catalog = () => {
+const Catalog = () => { 
   const dispatch = useDispatch();
   const { books, loading, error } = useSelector((state) => state.admin);
 

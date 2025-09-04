@@ -15,6 +15,8 @@ import Register from "./components/common/Register";
 import ProtectedRoute from './components/common/ProtectedRoute'
 import BookList from "./components/common/BookList";
 import AddBook from "./components/common/AddBook";
+import Success from "./components/ui/Success";
+import Cancel from "./components/ui/Cancel";
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
         <Route path="catalog" element={<Catalog />} />
         <Route path="mybooks" element={<MyBooks />} />
         <Route path="profile" element={<Profile />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/cancel" element={<Cancel />} />
 
         <Route
           path="/admin"

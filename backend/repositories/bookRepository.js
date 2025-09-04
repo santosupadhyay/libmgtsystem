@@ -1,18 +1,19 @@
-const BookRepository = ( book ) => ({
-    createBook : async(bookData) => {
-        return await book.create(bookData)
+const Book = require('../models/Book')
+const bookRepository = () => ({
+    createBook : async(BookData) => {
+        return await Book.create(BookData)
     },
     getAllBooks: async() => {
-        return await book.find()
+        return await Book.find()
     },
     getBookById : async(id) => { 
-        return await book.findById(id)
+        return await Book.findById(id)
     },
     updateBookById : async(id, updateData) => {
-        return await book.findByIdAndUpdate(id, updateData, {new:true})
+        return await Book.findByIdAndUpdate(id, updateData, {new:true})
     },
     deleteBookById: async(id) => {
-        return await book.findByIdAndDelete(id)
+        return await Book.findByIdAndDelete(id)
     }
 })
-module.exports = BookRepository;
+module.exports = bookRepository;

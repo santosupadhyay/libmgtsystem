@@ -1,31 +1,59 @@
 const paymentService = require("../services/paymentService");
 
-const createCheckout = async (request, response) => {
-  try {
-    const { bookId, userEmail } = request.body;
-    if (!bookId || !userEmail) {
-      return response.status(400).json({
+const paymentController = {
+  createCheckoutSession: async (req, res) => {
+    console.log(req.body);
+    try {
+      const { bookId, userEmail, borrowFee } = req.body;
+      console.log(bookId, userEmail, borrowFee);
+
+      const session = await paymentService.createCheckoutSession({
+        bookId,
+        userEmail,
+        borrowFee,
+      });
+
+      res.json({
+        success: true,
+        sessionId: session.id,
+        url:session.url
+      });
+    } catch (error) {
+      console.log(`payment route hit`);
+      res.status(500).json({
         success: false,
-        message: "bookId and userEmail are required in the request body",
+        message: error.message,
       });
     }
-    const session = await paymentService.createCheckoutSession(
-      bookId,
-      userEmail
-    );
-    response.status(200).json({
-      success: true,
-      message: "Payment successful",
-      sessionId: session.id,
-    });
-  } catch (error) {
-    return response.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+  },
+
+  // handleWebhook: async (req, res) => {
+  //     try {
+  //         const signature = req.headers['stripe-signature'];
+  //         const result = await paymentService.handleWebhook(req.body, signature);
+
+  //         res.status(200).json({ received: true });
+  //     } catch (error) {
+  //         res.status(400).json({ error: error.message });
+  //     }
+  // },
+
+  // verifyPayment: async (req, res) => {
+  //     try {
+  //         const { sessionId } = req.params;
+  //         const paymentStatus = await paymentService.verifyPayment(sessionId);
+
+  //         res.json({
+  //             success: true,
+  //             status: paymentStatus
+  //         });
+  //     } catch (error) {
+  //         res.status(500).json({
+  //             success: false,
+  //             message: error.message
+  //         });
+  //     }
+  // }
 };
 
-module.exports = {
-  createCheckout,
-};
+module.exports = paymentController;
